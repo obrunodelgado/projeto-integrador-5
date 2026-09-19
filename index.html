@@ -1,0 +1,1215 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Psicoeducação de bem-estar em ambiente de hotelaria · Proposta de extensão</title>
+  <style>
+    :root {
+      --bg:      oklch(97.5% 0.008 240);
+      --surface: oklch(100% 0.004 240);
+      --fg:      oklch(23% 0.03 245);
+      --muted:   oklch(50% 0.025 245);
+      --border:  oklch(89% 0.018 240);
+      --tint:    oklch(94.5% 0.018 235);
+      --accent:  oklch(54% 0.13 235);
+
+      --muted-on-dark:  oklch(78% 0.025 235);
+      --border-on-dark: oklch(38% 0.03 240);
+      --accent-on-dark: oklch(75% 0.12 220);
+      --accent-deep: oklch(38% 0.11 240);
+
+      --font-display: 'Iowan Old Style', 'Charter', 'Palatino Linotype', Georgia, serif;
+      --font-body:    -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-mono:    ui-monospace, 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+      --fs: 32px;
+      /* Padrão tipográfico do deck: header/meta 23px · título 42px ·
+         subtítulo 28px · corpo, listas e bullets 32px. */
+      --fs-meta: 23px;
+      --fs-dense: 23px;
+      --fs-title: 42px;
+      --fs-sub: 28px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: var(--fs);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+    }
+    body::-webkit-scrollbar { display: none; }
+    p { text-wrap: pretty; margin: 0; }
+    h1, h2, h3 { text-wrap: balance; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    img { max-width: 100%; }
+
+    /* ─── slide surface ─────────────────────────────────────────────── */
+    .slide {
+      flex: 0 0 100vw;
+      width: 100vw;
+      height: 100vh;
+      scroll-snap-align: start;
+      padding: clamp(40px, 4.6vw, 76px) clamp(40px, 5.4vw, 92px);
+      display: flex;
+      flex-direction: column;
+      justify-content: safe center;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scrollbar-width: none;
+      isolation: isolate;
+    }
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: linear-gradient(180deg, var(--accent), color-mix(in oklch, var(--accent) 35%, transparent));
+      opacity: 0.72;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .slide.tint::before { opacity: 0.9; }
+    .slide.dark::before { background: var(--accent-on-dark); }
+    .slide::-webkit-scrollbar { display: none; }
+    .slide > * { flex-shrink: 0; }
+    .slide.light { background: var(--bg); color: var(--fg); }
+    .slide.tint  { background: var(--tint); color: var(--fg); }
+    .slide.dark  { background: var(--fg); color: var(--bg); }
+    .slide.dark .lead,
+    .slide.dark .muted,
+    .slide.dark .topics .src { color: var(--muted-on-dark); }
+    .slide.dark .topics li { color: var(--bg); }
+    .slide.dark .eyebrow { color: var(--accent-on-dark); }
+    .slide.hero { padding-block: clamp(48px, 6vw, 96px); }
+    .slide.center { align-items: center; text-align: center; justify-content: safe center; }
+    .slide.center .body { margin-inline: auto; }
+    .slide.center .h-xl { max-width: 30ch; }
+    .slide.center .h-question { max-width: 30ch; }
+    .slide.center .lead { max-width: 46ch; }
+    .slide .h-hero,
+    .slide .h-xl,
+    .slide .h-md,
+    .slide .h-question,
+    .slide .ev-title,
+    .slide .encontro h3 { font-weight: 700; }
+    .slide strong { font-weight: 700; color: var(--accent-deep); }
+    .slide.dark strong { color: var(--accent-on-dark); }
+
+    /* ─── eyebrow / kicker ──────────────────────────────────────────── */
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: var(--fs-meta);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 0 0 22px;
+    }
+
+    /* ─── type ──────────────────────────────────────────────────────── */
+    .h-hero {
+      font-family: var(--font-display);
+      font-size: var(--fs-title);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      margin: 0 0 22px;
+      max-width: 26ch;
+    }
+    .h-xl {
+      font-family: var(--font-display);
+      font-size: var(--fs-title);
+      font-weight: 700;
+      line-height: 1.14;
+      letter-spacing: -0.02em;
+      margin: 0 0 20px;
+      max-width: 24ch;
+    }
+    .h-md {
+      font-family: var(--font-display);
+      font-size: var(--fs-title);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      margin: 0 0 18px;
+      max-width: 34ch;
+    }
+    .lead {
+      font-size: var(--fs-sub);
+      line-height: 1.5;
+      color: var(--muted);
+      max-width: 56ch;
+      margin: 0;
+    }
+    .meta { font-family: var(--font-mono); font-size: var(--fs-meta); color: var(--muted); letter-spacing: 0.02em; }
+
+    /* ─── split (editorial two-column) ──────────────────────────────── */
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.35fr);
+      gap: clamp(32px, 4.2vw, 78px);
+      align-items: start;
+    }
+
+    /* ─── topic lists (base size = 23px) ────────────────────────────── */
+    .topics { display: grid; gap: 18px; }
+    .topics.two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 44px; }
+    .topics li {
+      position: relative;
+      padding-left: 26px;
+      max-width: 68ch;
+      font-size: var(--fs);
+      line-height: 1.5;
+      color: var(--fg);
+    }
+    .topics li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0.72em;
+      width: 12px; height: 1px;
+      background: var(--muted);
+    }
+    .slide.dark .topics li::before { background: var(--muted-on-dark); }
+    .topics .src { font-size: var(--fs-meta); color: var(--muted); }
+    .topics:not(.two) .src { white-space: nowrap; }
+
+    /* ─── evidence register (demanda) ───────────────────────────────── */
+    .evidence {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-auto-rows: 1fr;
+      column-gap: clamp(24px, 2.6vw, 40px);
+      row-gap: clamp(22px, 3vh, 36px);
+      align-items: stretch;
+    }
+    .evidence li {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: clamp(20px, 2.2vh, 28px) clamp(22px, 1.8vw, 30px);
+      box-shadow: 0 10px 28px color-mix(in oklch, var(--fg) 5%, transparent);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+    .evidence li:hover { box-shadow: 0 14px 32px color-mix(in oklch, var(--fg) 9%, transparent); }
+    .evidence .ev-head {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .evidence .ev-num {
+      flex: none;
+      font-family: var(--font-mono);
+      font-size: var(--fs-meta);
+      letter-spacing: 0.06em;
+      color: var(--accent);
+    }
+    .evidence .ev-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-sub);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+      margin: 0;
+    }
+    .evidence .ev-find {
+      font-size: var(--fs);
+      line-height: 1.22;
+      letter-spacing: -0.015em;
+      color: var(--fg);
+      margin: 0 0 16px;
+      overflow-wrap: break-word;
+    }
+    .evidence .ev-find strong { font-weight: 600; }
+    .evidence .ev-src {
+      display: block;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: var(--fs-meta);
+      letter-spacing: 0.02em;
+      line-height: 1.35;
+      color: var(--muted);
+      overflow-wrap: break-word;
+    }
+    .slide.dark .evidence li { border-color: var(--border-on-dark); background: transparent; }
+    .slide.dark .evidence .ev-src { color: var(--muted-on-dark); border-top-color: var(--border-on-dark); }
+    .slide.dark .evidence .ev-find,
+    .slide.dark .evidence .ev-title { color: var(--bg); }
+
+    /* ─── demanda: título em toda a largura + grade 2×2 ─────────────── */
+    .slide.demanda .eyebrow { margin-bottom: 14px; }
+    .demanda-head {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: clamp(16px, 2vh, 24px);
+      margin-bottom: clamp(20px, 2.6vh, 32px);
+    }
+    .demanda-titulo {
+      max-width: none;
+      margin-bottom: 0;
+      font-size: var(--fs-title);
+      line-height: 1.1;
+    }
+
+    /* ─── numbered list (objetivos específicos) ─────────────────────── */
+    .numlist { display: grid; gap: 16px; max-width: 72ch; }
+    .numlist li {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 14px;
+      font-size: var(--fs);
+      line-height: 1.5;
+      align-items: baseline;
+    }
+    .numlist .nb {
+      font-family: var(--font-mono);
+      font-size: var(--fs-meta);
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    [data-od-id="objetivos-especificos-lista"] .nb,
+    [data-od-id="metodologia-topicos"] .nb {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      padding-top: 0;
+      border: 1px solid color-mix(in oklch, var(--accent) 55%, var(--border));
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--accent) 9%, transparent);
+      color: var(--accent-deep);
+    }
+    .slide.dark [data-od-id="metodologia-topicos"] .nb { color: var(--accent-on-dark); border-color: var(--accent-on-dark); }
+
+    /* ─── protocolo metodológico (etapas numeradas, medida curta) ───── */
+    .split.method { grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.5fr); }
+    .steps { gap: 0; max-width: none; }
+    .steps li {
+      border-top: 1px solid var(--border);
+      padding: 15px 0;
+    }
+    .steps li:last-child { border-bottom: 1px solid var(--border); }
+    .steps .nb { padding-top: 5px; }
+    .steps .src { font-size: var(--fs-meta); color: var(--muted); }
+    .slide.dark .steps li { color: var(--bg); border-top-color: var(--border-on-dark); }
+    .slide.dark .steps li:last-child { border-bottom-color: var(--border-on-dark); }
+    .slide.dark .steps .nb,
+    .slide.dark .steps .src { color: var(--muted-on-dark); }
+    .method-meta { margin-top: 28px; }
+    .slide.dark .method-meta { color: var(--muted-on-dark); }
+
+    /* ─── roster (equipe) ───────────────────────────────────────────── */
+    .roster { display: grid; gap: 26px; }
+    .roster-row {
+      display: grid;
+      grid-template-columns: minmax(0, 0.52fr) minmax(0, 1fr);
+      gap: clamp(16px, 2.4vw, 44px);
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      align-items: start;
+    }
+    .roster-role {
+      font-family: var(--font-mono);
+      font-size: var(--fs-meta);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 400;
+      margin: 0;
+      line-height: 1.6;
+    }
+    .roster-names { display: grid; gap: 4px; }
+    .roster-names li {
+      font-family: var(--font-display);
+      font-size: var(--fs);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+    }
+    .roster-note { margin-top: 26px; }
+
+    /* ─── encontros (3 encontros) ───────────────────────────────────── */
+    .encontros { display: grid; gap: 20px; }
+    .encontro {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 18px;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .encontro .nb {
+      font-family: var(--font-mono);
+      font-size: var(--fs-meta);
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      padding-top: 0;
+      border: 1px solid color-mix(in oklch, var(--accent) 55%, var(--border));
+      border-radius: 999px;
+      background: color-mix(in oklch, var(--accent) 9%, transparent);
+      color: var(--accent-deep);
+    }
+    .encontro h3 {
+      font-family: var(--font-display);
+      font-size: var(--fs-sub);
+      font-weight: 500;
+      line-height: 1.2;
+      margin: 0 0 5px;
+      letter-spacing: -0.01em;
+      color: var(--muted);
+    }
+    .encontro p { font-size: var(--fs); line-height: 1.5; color: var(--fg); margin: 0; max-width: 70ch; }
+
+    /* ─── cronograma ────────────────────────────────────────────────── */
+    .sched { display: grid; gap: 0; max-width: 96ch; }
+    .sched li {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.7fr);
+      gap: 24px;
+      align-items: baseline;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: var(--fs);
+      line-height: 1.4;
+      padding-inline: 16px;
+      border-radius: 8px;
+    }
+    .sched li:nth-child(even) { background: color-mix(in oklch, var(--accent) 5%, transparent); }
+    .sched li:first-child { border-top: 1px solid var(--border); }
+    .sched .when {
+      font-family: var(--font-mono);
+      font-size: var(--fs-dense);
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      border-bottom: 1px dashed color-mix(in oklch, var(--muted) 45%, transparent);
+      justify-self: start;
+    }
+    .sched .what { color: var(--fg); }
+    .slide.dark .sched li { border-bottom-color: var(--border-on-dark); }
+    .slide.dark .sched li:first-child { border-top-color: var(--border-on-dark); }
+    .slide.dark .sched .when {
+      color: var(--muted-on-dark);
+      border-bottom-color: color-mix(in oklch, var(--muted-on-dark) 55%, transparent);
+    }
+    .slide.dark .sched .what { color: var(--bg); }
+
+    /* ─── referências ───────────────────────────────────────────────── */
+    .refs { display: grid; gap: 14px; max-width: 80ch; }
+    .refs li {
+      font-size: var(--fs-dense);
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+      color: var(--fg);
+      padding-left: 22px;
+      position: relative;
+    }
+    .refs li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0.68em;
+      width: 10px; height: 1px;
+      background: var(--border);
+    }
+    .refs .doi {
+      font-family: var(--font-mono);
+      font-size: var(--fs-dense);
+      color: var(--muted);
+      letter-spacing: 0.01em;
+      word-break: break-all;
+    }
+    .slide.dark .refs li { color: var(--bg); }
+    .slide.dark .refs li::before { background: var(--border-on-dark); }
+    .slide.dark .refs .doi { color: var(--muted-on-dark); }
+    /* Bloco único de referências: 9 entradas em um só slide, em 2 colunas. */
+    .refs.compact {
+      display: block;
+      column-count: 2;
+      column-gap: clamp(28px, 4vw, 56px);
+      max-width: none;
+    }
+    .refs.compact li {
+      font-size: 16px;
+      line-height: 1.45;
+      letter-spacing: 0;
+      padding-left: 18px;
+      margin: 0 0 10px;
+      break-inside: avoid;
+    }
+    .refs.compact li:last-child { margin-bottom: 0; }
+    .refs.compact li::before { top: 0.62em; width: 8px; }
+    .refs.compact .doi { font-size: 15px; }
+
+    /* ─── capa (capa editorial: masthead, herói e rodapé institucional) ─ */
+    .slide.cover {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      grid-template-areas:
+        "top  top"
+        "copy plate"
+        "foot foot";
+      column-gap: clamp(32px, 3.8vw, 68px);
+      row-gap: clamp(16px, 1.8vw, 30px);
+      align-items: center;
+      padding-right: 0;
+      background:
+        radial-gradient(circle at 82% 42%, color-mix(in oklch, var(--accent) 10%, transparent), transparent 28%),
+        var(--bg);
+    }
+    .cover-top {
+      grid-area: top;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+    }
+    .cover-top .eyebrow { margin: 0; }
+    .cover-copy { grid-area: copy; align-self: center; }
+    .cover-copy .h-hero {
+      font-size: var(--fs-title);
+      line-height: 1.04;
+      letter-spacing: -0.025em;
+      max-width: 22ch;
+      margin: 0 0 24px;
+    }
+    .cover-rule {
+      border: 0;
+      border-top: 3px solid var(--accent);
+      width: 84px;
+      margin: 0 0 20px;
+    }
+    .cover-copy .lead { max-width: 42ch; }
+    .cover-plate { grid-area: plate; margin: 0; align-self: center; }
+    .cover-plate img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1600 / 1065;
+      border-radius: 16px;
+      box-shadow: 0 18px 42px color-mix(in oklch, var(--fg) 17%, transparent);
+    }
+    .cover-foot {
+      grid-area: foot;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .cover-foot .meta {
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── big-question layout ───────────────────────────────────────── */
+    .h-question {
+      font-family: var(--font-display);
+      font-size: var(--fs-title);
+      font-weight: 500;
+      line-height: 1.28;
+      letter-spacing: -0.015em;
+      max-width: 34ch;
+      margin: 0;
+    }
+
+    /* ─── chrome ────────────────────────────────────────────────────── */
+    .deck-counter {
+      position: fixed;
+      bottom: 24px; right: 32px;
+      font-family: var(--font-mono);
+      font-size: var(--fs-dense);
+      color: var(--fg);
+      background: var(--surface);
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      letter-spacing: 0.04em;
+      z-index: 20;
+    }
+    .deck-hint {
+      position: fixed;
+      bottom: 24px; left: 32px;
+      font-family: var(--font-mono);
+      font-size: var(--fs-dense);
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      background: color-mix(in oklch, var(--bg) 88%, transparent);
+      padding: 6px 10px;
+      z-index: 20;
+    }
+    /* O deck será exibido em datashow: não cobrir o conteúdo com chrome. */
+    .deck-counter,
+    .deck-hint { display: none; }
+    .deck-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: var(--accent);
+      width: 0;
+      z-index: 20;
+      transition: width 0.18s ease;
+    }
+    body.notes-open .deck-counter,
+    body.notes-open .deck-hint { bottom: calc(36vh + 20px); }
+
+    /* ─── notes do apresentador ─────────────────────────────────────── */
+    .notes { display: none; }
+    .notes-panel {
+      display: none;
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      max-height: 36vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border-top: 2px solid var(--accent);
+      padding: 18px clamp(40px, 5.4vw, 92px) 26px;
+      z-index: 30;
+    }
+    body.notes-open .notes-panel { display: block; }
+    .notes-panel-head {
+      display: flex;
+      gap: 16px;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .notes-panel-label {
+      font-family: var(--font-mono);
+      font-size: var(--fs-meta);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .notes-panel-slide { font-family: var(--font-mono); font-size: var(--fs-meta); color: var(--muted); letter-spacing: 0.04em; }
+    .notes-panel-body { font-size: var(--fs); line-height: 1.55; color: var(--fg); max-width: 96ch; }
+    .notes-panel-body p + p { margin-top: 8px; }
+    .notes-panel-body strong { font-weight: 600; }
+
+    /* ─── short viewports (notebooks 768 a 860, projetores): cabe ─────── */
+    @media (max-height: 860px) {
+      .slide { padding-block: clamp(22px, 3vh, 40px); }
+      .slide.hero { padding-block: clamp(24px, 3.4vh, 44px); }
+      .eyebrow { margin-bottom: 16px; }
+      .h-md { margin-bottom: 14px; }
+      .topics { gap: 14px; }
+      .roster { gap: 20px; }
+      .roster-row { padding-top: 11px; }
+      .encontros { gap: 14px; }
+      .encontro { padding-top: 11px; }
+      .numlist { gap: 12px; }
+      .steps li { padding: 12px 0; }
+      .sched li { padding: 11px 0; }
+      .refs { gap: 10px; }
+      .split { gap: clamp(24px, 3vw, 48px); }
+
+      /* A metodologia é o slide mais denso; compactá-la evita rolagem
+         involuntária em projetores 16:9 e notebooks baixos. */
+      [data-od-id="metodologia"] .h-xl {
+        font-size: clamp(32px, 3.3vw, 38px);
+        margin-bottom: 12px;
+      }
+      [data-od-id="metodologia"] .method-meta {
+        font-size: clamp(17px, 1.8vw, 21px);
+        margin-top: 14px;
+      }
+      [data-od-id="metodologia"] .steps li {
+        font-size: clamp(21px, 2.05vw, 26px);
+        line-height: 1.32;
+        padding: 8px 0;
+      }
+      [data-od-id="metodologia"] .steps .nb {
+        font-size: clamp(17px, 1.7vw, 21px);
+        padding-top: 2px;
+      }
+    }
+
+    /* ─── narrow viewports ──────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .split { grid-template-columns: 1fr; }
+      .refs.compact { column-count: 1; }
+      .split.method { grid-template-columns: 1fr; }
+      .topics.two { grid-template-columns: 1fr; }
+      .roster-row { grid-template-columns: 1fr; gap: 8px; }
+      .sched li { grid-template-columns: 1fr; gap: 4px; }
+      .evidence {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+        row-gap: 18px;
+      }
+      .evidence li:hover { transform: none; }
+      .slide.demanda { justify-content: safe center; }
+      .slide.cover {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto;
+        grid-template-areas: "top" "copy" "plate" "foot";
+        row-gap: 22px;
+        padding-right: clamp(40px, 5.4vw, 92px);
+      }
+      .cover-plate img {
+        width: auto;
+        max-width: 100%;
+        max-height: 34vh;
+        margin-inline: auto;
+      }
+
+      [data-od-id="metodologia"] .split.method { gap: 18px; }
+      [data-od-id="metodologia"] .h-xl {
+        font-size: clamp(30px, 7vw, 38px);
+      }
+      [data-od-id="metodologia"] .steps li {
+        font-size: clamp(20px, 4.8vw, 25px);
+        line-height: 1.32;
+        padding: 9px 0;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .evidence li { padding: 16px 18px 18px; }
+    }
+
+    /* ─── slide 03 (demanda): ajuste fino por altura da tela ────────── */
+    /* A frase-achado segue o corpo padrão (32 px); abaixo só recuam os
+       espaçamentos para preservar topo e rodapé livres. */
+    @media (max-height: 940px) {
+      .slide.demanda .eyebrow { margin-bottom: 12px; }
+      .demanda-head { padding-bottom: 14px; margin-bottom: 18px; }
+      .evidence { row-gap: 20px; }
+      .evidence li { padding: 18px 22px 20px; }
+      .evidence .ev-head { margin-bottom: 10px; }
+      .evidence .ev-find { margin-bottom: 14px; }
+    }
+    @media (max-height: 780px) {
+      .slide.demanda { padding-block: clamp(20px, 3vh, 34px); }
+      .evidence { row-gap: 14px; }
+      .evidence li { padding: 14px 18px 16px; }
+      .evidence .ev-find { margin-bottom: 10px; }
+    }
+    @media (max-height: 680px) {
+      .evidence .ev-src { padding-top: 9px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body { scroll-behavior: auto; }
+      .deck-progress { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ 01 · Capa ═══════════════════════════════════════════════════ -->
+  <section class="slide hero light cover" data-screen-label="01 Capa" data-od-id="capa">
+    <header class="cover-top">
+      <p class="eyebrow" data-od-id="capa-disciplina">Práticas de vivências interdisciplinares</p>
+    </header>
+    <div class="cover-copy">
+      <h1 class="h-hero" data-od-id="capa-titulo">Psicoeducação de bem-estar em ambiente de hotelaria</h1>
+      <hr class="cover-rule" aria-hidden="true">
+      <p class="lead" data-od-id="capa-resumo">Proposta de intervenção psicoeducativa breve com a equipe de governança do Hotel Viale Tower, Foz do Iguaçu, Paraná.</p>
+    </div>
+    <figure class="cover-plate" data-od-id="capa-imagem">
+      <img src="assets/WhatsApp-Image-2026-09-17-at-20.51.15.jpeg" width="1600" height="1065" alt="">
+    </figure>
+    <div class="cover-foot">
+      <p class="meta" data-od-id="capa-rodape">Faculdade Uniguaçu · Curso de Psicologia · [DATA]</p>
+    </div>
+    <div class="notes">
+      <p>Abrir agradecendo à banca e situando o grupo: <strong>somos quatro estudantes de Psicologia da Faculdade Uniguaçu</strong>, com mentoria profissional e orientação docente.</p>
+      <p>Em uma frase: propomos uma intervenção psicoeducativa breve de <strong>três encontros</strong> com as camareiras do Hotel Viale Tower, em Foz do Iguaçu. O foco não é tratar transtornos, e sim promover saúde mental e bem-estar no próprio ambiente de trabalho.</p>
+      <p>Substituir <strong>[DATA]</strong> pela data da apresentação.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 02 · Equipe ═════════════════════════════════════════════════ -->
+  <section class="slide light" data-screen-label="02 Acadêmicos, docentes e mentores" data-od-id="equipe">
+    <p class="eyebrow">Acadêmicos, docentes e mentores</p>
+    <div class="split">
+      <div>
+        <h2 class="h-xl" data-od-id="equipe-titulo">Quem assina este projeto.</h2>
+        <p class="lead">Quatro estudantes de Psicologia, uma mentora profissional e um docente orientador.</p>
+      </div>
+      <div class="roster" data-od-id="equipe-lista">
+        <div class="roster-row">
+          <h3 class="roster-role">Estudantes<br>Curso de Psicologia</h3>
+          <ul class="roster-names">
+            <li>Aline Giselle Rocha Pereira</li>
+            <li>Bruno Rafael Delgado Augusto</li>
+            <li>Francisco Edival Rodrigues Filho</li>
+            <li>Jeynifer Maria Ramire Kurtz</li>
+          </ul>
+        </div>
+        <div class="roster-row">
+          <h3 class="roster-role">Mentoria<br>profissional</h3>
+          <ul class="roster-names">
+            <li>Gisleine Maria Karwoski</li>
+          </ul>
+        </div>
+        <div class="roster-row">
+          <h3 class="roster-role">Docência<br>orientadora</h3>
+          <ul class="roster-names">
+            <li>Gabriel Sousa Andrade</li>
+          </ul>
+        </div>
+        <p class="meta roster-note">Faculdade Uniguaçu, Foz do Iguaçu, Paraná</p>
+      </div>
+    </div>
+    <div class="notes">
+      <p>Apresentar rapidamente cada integrante. Gisleine atua como <strong>mentora profissional da área de Psicologia</strong> na cidade; Gabriel é docente do curso, especialista em educação, e responde pela orientação metodológica.</p>
+      <p>Deixar claro o desenho de trabalho: os estudantes conduzem a intervenção, com supervisão da mentora e do docente.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 03 · Demanda ════════════════════════════════════════════════ -->
+  <section class="slide tint demanda" data-screen-label="03 Demanda" data-od-id="demanda">
+    <header class="demanda-head">
+      <p class="eyebrow">Demanda</p>
+      <h2 class="h-xl demanda-titulo" data-od-id="demanda-titulo">Um trabalho fisicamente exigente e emocionalmente invisível.</h2>
+    </header>
+    <ul class="evidence" data-od-id="demanda-evidencias">
+      <li data-od-id="demanda-evidencia-01">
+        <div class="ev-head">
+          <span class="ev-num" aria-hidden="true">01</span>
+          <h3 class="ev-title">Dor e desgaste físico</h3>
+        </div>
+        <p class="ev-find">A rotina de governança está associada a <strong>dor e desgaste físico</strong>.</p>
+        <p class="ev-src">Burgel et al., 2010</p>
+      </li>
+      <li data-od-id="demanda-evidencia-02">
+        <div class="ev-head">
+          <span class="ev-num" aria-hidden="true">02</span>
+          <h3 class="ev-title">Saúde mental comprometida</h3>
+        </div>
+        <p class="ev-find">Turnos alternados, fadiga e privação de sono comprometem a <strong>saúde mental</strong>.</p>
+        <p class="ev-src">Hotel et al., 2025</p>
+      </li>
+      <li data-od-id="demanda-evidencia-03">
+        <div class="ev-head">
+          <span class="ev-num" aria-hidden="true">03</span>
+          <h3 class="ev-title">Ansiedade e depressão</h3>
+        </div>
+        <p class="ev-find">Condições psicossociais adversas e baixo suporte social associam-se a <strong>ansiedade e depressão</strong>.</p>
+        <p class="ev-src" style="transform: translate(8px, 0px);">García-Buades et al., 2025</p>
+      </li>
+      <li data-od-id="demanda-evidencia-04">
+        <div class="ev-head">
+          <span class="ev-num" aria-hidden="true">04</span>
+          <h3 class="ev-title">Necessidade de ação</h3>
+        </div>
+        <p class="ev-find">Trabalhadores e gestores reconhecem a <strong>necessidade de intervenção</strong> no setor.</p>
+        <p class="ev-src">Rosemberg et al., 2022</p>
+      </li>
+    </ul>
+    <div class="notes">
+      <p>Esta é a página que justifica a existência do projeto. O argumento central: a demanda <strong>não é presumida pelo grupo</strong>, ela está documentada na literatura internacional sobre trabalho em hotelaria.</p>
+      <p>Se a banca perguntar sobre magnitude, citar que os estudos com camareiras encontram associação consistente entre condições psicossociais do trabalho e sintomas de ansiedade e depressão, sem transformar isso em número que não coletamos.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 04 · Questão norteadora ═════════════════════════════════════ -->
+  <section class="slide hero tint center" data-screen-label="04 Questão norteadora" data-od-id="questao-norteadora">
+    <div class="body">
+      <p class="eyebrow">Questão norteadora</p>
+      <p class="h-question" data-od-id="questao-norteadora-texto">De que forma uma intervenção psicoeducativa breve pode contribuir para a promoção da saúde mental e do bem-estar das camareiras em ambiente de hotelaria?</p>
+    </div>
+    <div class="notes">
+      <p>Ler a questão devagar. Ela delimita três escolhas do projeto: <strong>intervenção breve</strong> (três encontros, não um programa longo), <strong>psicoeducação</strong> (não psicoterapia) e <strong>promoção de bem-estar</strong> (não tratamento de transtornos).</p>
+      <p>Esse recorte responde à realidade das camareiras: turnos, carga de quartos por dia e pouca disponibilidade de horário.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 05 · Objetivo geral ═════════════════════════════════════════ -->
+  <section class="slide hero light center" data-screen-label="05 Objetivo geral" data-od-id="objetivo-geral">
+    <div class="body">
+      <p class="eyebrow">Objetivo geral</p>
+      <h2 class="h-xl" data-od-id="objetivo-geral-texto">Promover a saúde mental e o bem-estar das camareiras por meio de uma intervenção psicoeducativa breve, realizada no próprio ambiente de trabalho.</h2>
+    </div>
+    <div class="notes">
+      <p>Ler o objetivo geral uma vez, devagar. Ele deve soar como uma frase só: <strong>promover saúde mental e bem-estar</strong>, com um método (psicoeducação breve) e um lugar (o ambiente de trabalho).</p>
+      <p>Se a banca pedir, o objetivo geral não menciona "reduzir sintomas"; isso fica nos objetivos específicos, medidos pela DASS-21.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 06 · Objetivos específicos ══════════════════════════════════ -->
+  <section class="slide light" data-screen-label="06 Objetivos específicos" data-od-id="objetivos-especificos">
+    <p class="eyebrow">Objetivos específicos</p>
+    <h2 class="h-md" data-od-id="objetivos-especificos-titulo">Duas etapas de caracterização, três frentes de intervenção.</h2>
+    <ol class="numlist" data-od-id="objetivos-especificos-lista">
+      <li><span class="nb">01</span><span>Caracterizar o <strong>perfil sociodemográfico</strong> e ocupacional das participantes da equipe de governança.</span></li>
+      <li><span class="nb">02</span><span>Identificar indicadores de depressão, ansiedade e estresse por meio da <strong>Escala DASS-21</strong>.</span></li>
+      <li><span class="nb">03</span><span><strong>Psicoeducar sobre estresse e ansiedade</strong> e treinar a respiração como ferramenta de autorregulação.</span></li>
+      <li><span class="nb">04</span><span>Desenvolver a <strong>inteligência emocional</strong> e o reconhecimento e a nomeação das próprias emoções no trabalho.</span></li>
+      <li><span class="nb">05</span><span>Fortalecer a <strong>autocompaixão</strong> e reestruturar pensamentos disfuncionais ligados à autocobrança e à invisibilidade.</span></li>
+    </ol>
+    <div class="notes">
+      <p>Os dois primeiros objetivos são de <strong>caracterização e triagem</strong>; os três últimos correspondem exatamente aos três encontros. Isso mostra coerência entre o que se mede e o que se intervém.</p>
+      <p>A DASS-21 entra como instrumento de triagem, não como diagnóstico; vale reforçar esse limite se a banca questionar.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 07 · Introdução ═════════════════════════════════════════════ -->
+  <section class="slide tint" data-screen-label="07 Introdução" data-od-id="introducao">
+    <p class="eyebrow">Introdução</p>
+    <div class="split">
+      <div>
+        <h2 class="h-xl" data-od-id="introducao-titulo">Cuidar de quem cuida dos quartos.</h2>
+        <p class="lead">A literatura mostra que programas breves já produziram redução de ansiedade em trabalhadores de hotelaria.</p>
+      </div>
+      <ul class="topics" data-od-id="introducao-topicos">
+        <li>Programas breves de manejo do estresse <strong>reduziram significativamente os níveis de ansiedade</strong> em funcionários de hotelaria. <span class="src">(Biding; Nordin, 2014)</span></li>
+        <li>Ações de <strong>psicoeducação, respiração e relaxamento</strong> fortalecem recursos psicológicos e estratégias de enfrentamento. <span class="src">(Andersson et al., 2022)</span></li>
+        <li>Mindfulness, entendido como atenção intencional ao momento presente e sem julgamento, favorece o <strong>reconhecimento das próprias emoções e pensamentos</strong>. <span class="src">(Zhang et al., 2025)</span></li>
+      </ul>
+    </div>
+    <div class="notes">
+      <p>Ponto de partida: já existe evidência de que <strong>intervenções curtas funcionam</strong> nesse contexto. Não estamos inventando um formato; estamos adaptando um procedimento com respaldo.</p>
+      <p>Se pedirem o referencial de mindfulness, a definição usada no projeto é a de atenção ao momento presente, intencional e sem julgamento (Zhang et al., 2025).</p>
+    </div>
+  </section>
+
+  <!-- ═══ 08 · Justificativa ══════════════════════════════════════════ -->
+  <section class="slide light" data-screen-label="08 Justificativa" data-od-id="justificativa">
+    <p class="eyebrow">Justificativa</p>
+    <h2 class="h-md" data-od-id="justificativa-titulo">Prevenir antes que o desgaste vire adoecimento.</h2>
+    <ul class="topics two" data-od-id="justificativa-topicos">
+      <li>Ações de <strong>promoção da saúde mental</strong> no trabalho ampliam as estratégias de enfrentamento do estresse e reduzem o risco de agravamento de quadros de ansiedade e depressão.</li>
+      <li>Práticas de <strong>mindfulness e inteligência emocional</strong> favorecem o reconhecimento das próprias emoções e pensamentos no dia de trabalho.</li>
+      <li><strong>Intervenções breves</strong> são compatíveis com a rotina de turnos e com a baixa disponibilidade de horário das camareiras.</li>
+      <li>A intervenção acontece no próprio hotel, com rodas de conversa e atividades práticas, com <strong>baixo custo e alta aplicabilidade</strong>.</li>
+    </ul>
+    <div class="notes">
+      <p>O argumento é de <strong>prevenção e promoção</strong>, não de tratamento. O projeto não substitui atendimento psicológico; ele cria um espaço de reconhecimento emocional e de ferramentas de autorregulação.</p>
+      <p>Destacar a viabilidade: sem custo de deslocamento, dentro da jornada, com uma arquitetura de encontro que já prevê pausas e tarefas curtas.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 09 · Metodologia ════════════════════════════════════════════ -->
+  <section class="slide tint" data-screen-label="09 Metodologia" data-od-id="metodologia">
+    <p class="eyebrow">Metodologia</p>
+    <div class="split method">
+      <div>
+        <h2 class="h-xl" data-od-id="metodologia-titulo">Como a intervenção será conduzida.</h2>
+        <p class="meta method-meta">Coleta inicial concluída<br>Três encontros a realizar</p>
+      </div>
+      <ol class="numlist steps" data-od-id="metodologia-topicos">
+        <li>
+          <span class="nb">01</span>
+          <span><strong>Coleta demográfica inicial</strong>, com nacionalidade, idade, tempo de atuação, turno, quartos limpos por dia, escolaridade e práticas de autocuidado. <span class="src">(já realizada)</span></span>
+        </li>
+        <li>
+          <span class="nb">02</span>
+          <span><strong>Triagem com a Escala DASS-21</strong>, na versão brasileira validada por Vignola e Tucci (2014), antes do primeiro encontro.</span>
+        </li>
+        <li>
+          <span class="nb">03</span>
+          <span>Arquitetura comum a todos os encontros: <strong>mindfulness guiado</strong> (10 min), conteúdo temático (30 a 40 min) e recapitulação com tarefa de casa (10 min).</span>
+        </li>
+        <li>
+          <span class="nb">04</span>
+          <span>Procedimento adaptado de Biding e Nordin (2014), que identificou <strong>redução significativa da ansiedade</strong> em programa de três sessões de aproximadamente uma hora.</span>
+        </li>
+      </ol>
+    </div>
+    <div class="notes">
+      <p>Deixar claro o que <strong>já foi feito</strong>: a coleta demográfica inicial está concluída. Os encontros ainda não ocorreram. A DASS-21 é aplicada antes do primeiro encontro.</p>
+      <p>Explicar a arquitetura fixa dos encontros: sempre abrir com prática de mindfulness, entrar no conteúdo e fechar com tarefa de casa. A previsibilidade da estrutura ajuda na adesão.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 10 · Os três encontros ══════════════════════════════════════ -->
+  <section class="slide light" data-screen-label="10 Os três encontros" data-od-id="encontros">
+    <p class="eyebrow">A intervenção</p>
+    <h2 class="h-md" data-od-id="encontros-titulo">Três encontros, cerca de uma hora cada.</h2>
+    <div class="encontros" data-od-id="encontros-lista">
+      <div class="encontro">
+        <span class="nb">01</span>
+        <div>
+          <h3>Estresse e ansiedade</h3>
+          <p><strong>Psicoeducação sobre estresse</strong> e seu ciclo de manifestação, para normalizar a experiência. Rodas de conversa e exercícios de <strong>respiração</strong> como autorregulação.</p>
+        </div>
+      </div>
+      <div class="encontro">
+        <span class="nb">02</span>
+        <div>
+          <h3>Inteligência emocional</h3>
+          <p><strong>Reconhecimento e nomeação das próprias emoções</strong> no trabalho e compreensão das emoções alheias. Dinâmicas de autoconsciência, como o <strong>termômetro emocional</strong>, e roleplay de situações de atendimento a hóspedes.</p>
+        </div>
+      </div>
+      <div class="encontro">
+        <span class="nb">03</span>
+        <div>
+          <h3>Autocompaixão e pensamentos disfuncionais</h3>
+          <p><strong>Reestruturação cognitiva</strong> pela técnica de triangulação cognitiva, para identificar e reformular pensamentos negativos automáticos ligados à autocobrança e à invisibilidade. Encerra com um <strong>plano pessoal de enfrentamento</strong>.</p>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <p>Este slide é o coração da proposta. Cada encontro responde a um objetivo específico e tem uma técnica prática identificável: respiração, termômetro emocional e roleplay, triangulação cognitiva.</p>
+      <p>Se pedirem detalhe, o roleplay trabalha situações reais de atendimento a hóspedes, para reduzir o desgaste do trabalho emocional e fortalecer a escuta empática.</p>
+      <p>O terceiro encontro termina com um <strong>plano pessoal de enfrentamento</strong>; é o produto concreto que a participante leva embora.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 11 · Cronograma ═════════════════════════════════════════════ -->
+  <section class="slide tint" data-screen-label="11 Cronograma" data-od-id="cronograma">
+    <p class="eyebrow">Cronograma</p>
+    <h2 class="h-md" data-od-id="cronograma-titulo">Etapas e períodos previstos.</h2>
+    <ul class="sched" data-od-id="cronograma-lista">
+      <li><span class="what">Contato com o hotel e coleta demográfica inicial</span><span class="when">[DATA] · realizada</span></li>
+      <li><span class="what">Aplicação da triagem DASS-21</span><span class="when">[DATA]</span></li>
+      <li><span class="what">1º encontro: estresse e ansiedade</span><span class="when">[DATA]</span></li>
+      <li><span class="what">2º encontro: inteligência emocional</span><span class="when">[DATA]</span></li>
+      <li><span class="what">3º encontro: autocompaixão e reestruturação</span><span class="when">[DATA]</span></li>
+      <li><span class="what">Devolutiva ao hotel e relatório final</span><span class="when">[DATA]</span></li>
+    </ul>
+    <div class="notes">
+      <p>As faixas marcadas como <strong>[DATA]</strong> são placeholders: substituir pelos períodos reais antes da apresentação.</p>
+      <p>O que importa comunicar é a <strong>ordem</strong>: contato e caracterização, triagem, três encontros em sequência e devolutiva com relatório final ao hotel.</p>
+    </div>
+  </section>
+
+  <!-- ═══ 12 · Referências ════════════════════════════════════════════ -->
+  <section class="slide light" data-screen-label="12 Referências" data-od-id="referencias">
+    <p class="eyebrow">Referências</p>
+    
+    <ul class="refs compact" data-od-id="referencias-lista">
+      <li>ANDERSSON, Christina et al. Cultivating compassion and reducing stress and mental ill-health in employees: a randomized controlled study. <em>Frontiers in Psychology</em>, v. 12, 748140, 2022. <span class="doi">doi.org/10.3389/fpsyg.2021.748140</span></li>
+      <li>BIDING, Cindy; NORDIN, Rusli Bin. Effects of a stress management intervention program on self-perceived depression, anxiety, and stress among hotel employees: a quasi-experimental study. In: DOLLARD, Maureen F. et al. (org.). <em>Psychosocial factors at work in the Asia Pacific</em>. Dordrecht: Springer, 2014. p. 339-353. <span class="doi">doi.org/10.1007/978-94-017-8975-2_18</span></li>
+      <li>BURGEL, B. J. et al. Psychosocial work factors and shoulder pain in hotel room cleaners. <em>American Journal of Industrial Medicine</em>, 2010. <span class="doi">doi.org/10.1002/ajim.20832</span></li>
+      <li>CHELA-ALVAREZ, Xènia et al. Hotel housekeepers and occupational health: experiences and perceived risks. <em>Annals of Occupational and Environmental Medicine</em>, v. 34, e29, 2022. <span class="doi">doi.org/10.35371/aoem.2022.34.e29</span></li>
+      <li>GARCÍA-BUADES, M. Esther et al. Psychosocial work factors, job stress, and self-rated health among hotel housekeepers. <em>Workplace Health &amp; Safety</em>, v. 73, n. 3, p. 116-130, 2025. <span class="doi">doi.org/10.1177/21650799241282787</span></li>
+      <li>HOTEL, S. et al. Shift work, sleep, chronic fatigue, and mental health among hotel workers. <em>Journal of Occupational Health Psychology</em>, 2025. <span class="doi">doi.org/10.1177/01939459251341832</span></li>
+      <li>ROSEMBERG, Marie-Anne S. et al. Intervention needs among hotel employees and managers. <em>Work</em>, v. 71, n. 4, p. 1063-1071, 2022. <span class="doi">doi.org/10.3233/WOR-205060</span></li>
+      <li>VIGNOLA, Rose Claudia Batistelli; TUCCI, Adriana Marcassa. Adaptation and validation of the Depression, Anxiety and Stress Scale (DASS) to Brazilian Portuguese. <em>Journal of Affective Disorders</em>, v. 155, p. 104-109, 2014. <span class="doi">doi.org/10.1016/j.jad.2013.10.031</span></li>
+      <li>ZHANG, Xin et al. The mediating and moderating effects of mindfulness and emotional intelligence on the emotional labor strategies and career resilience of tourism employees. <em>Scientific Reports</em>, v. 15, 24268, 2025. <span class="doi">doi.org/10.1038/s41598-025-07078-3</span></li>
+    </ul>
+    <div class="notes">
+      <p>Referencial completo do projeto: evidência de eficácia de intervenções breves, contexto ocupacional das camareiras, necessidades de intervenção e instrumentos.</p>
+      <p>Destacar dois pontos: a <strong>DASS-21 na versão brasileira validada</strong> (Vignola; Tucci, 2014) sustenta a triagem; e o estudo de Biding e Nordin (2014) sustenta o formato breve de três sessões.</p>
+      <p>A referência completa, com links de acesso, está no resumo expandido entregue à banca.</p>
+    </div>
+  </section>
+
+  <!-- chrome -->
+  <div class="deck-progress" id="deck-progress" aria-hidden="true"></div>
+  <div class="deck-counter" id="deck-counter">1 / 12</div>
+  <div class="deck-hint">← / → · scroll · swipe · N notas</div>
+
+  <div class="notes-panel" id="notes-panel" role="region" aria-label="Notas do apresentador">
+    <div class="notes-panel-head">
+      <span class="notes-panel-label">Notas do apresentador</span>
+      <span class="notes-panel-slide" id="notes-slide-label"></span>
+    </div>
+    <div class="notes-panel-body" id="notes-body"></div>
+  </div>
+
+  <script>
+    /*
+      Five hard rules for deck nav inside an iframe (the OD preview is one).
+      The naive `document.body.scrollLeft` pattern silently fails: clicks
+      register, but keyboard does nothing, and the counter freezes at "1 / N"
+      while the user is on slide 6.
+
+      1. Detect the real scroller: body OR documentElement, depending.
+      2. Listen for scroll on BOTH window and document, capture phase.
+      3. Listen for keydown on BOTH window and document, capture phase.
+      4. Auto-focus body so arrow keys work without an upfront click.
+      5. Never use Element.scrollIntoView: it can yank the host page.
+    */
+    (function () {
+      var slides   = document.querySelectorAll('.slide');
+      var counter  = document.getElementById('deck-counter');
+      var progress = document.getElementById('deck-progress');
+      // Keep the resume position isolated per deck. The preview can host
+      // several HTML decks under the same localStorage origin.
+      var KEY      = 'od-deck-pos:' + (location.pathname || 'deck');
+      var active   = 0;
+      var resizeFrame = 0;
+
+      function scrollContainers() {
+        return [document.scrollingElement, document.documentElement, document.body]
+          .filter(Boolean)
+          .filter(function (el, idx, arr) { return arr.indexOf(el) === idx; });
+      }
+      function overflowX(el) {
+        if (!el) return 0;
+        return Math.max(0, (el.scrollWidth || 0) - (el.clientWidth || 0));
+      }
+      function scrollLeftOf(el) {
+        if (!el) return 0;
+        try { return Number(el.scrollLeft) || 0; } catch (_) { return 0; }
+      }
+      function activeScrollLeft() {
+        var candidates = scrollContainers();
+        var best = 0;
+        for (var i = 0; i < candidates.length; i++) {
+          var left = scrollLeftOf(candidates[i]);
+          if (Math.abs(left) > Math.abs(best)) best = left;
+        }
+        return best;
+      }
+      function scroller() {
+        var candidates = scrollContainers();
+        var best = candidates[0] || document.documentElement;
+        var bestScore = -1;
+        for (var i = 0; i < candidates.length; i++) {
+          var el = candidates[i];
+          var score = overflowX(el) + Math.abs(scrollLeftOf(el)) * 2;
+          if (score > bestScore) {
+            best = el;
+            bestScore = score;
+          }
+        }
+        return best;
+      }
+      function scrollToLeft(left, behavior) {
+        var candidates = scrollContainers();
+        for (var i = 0; i < candidates.length; i++) {
+          try { candidates[i].scrollLeft = left; } catch (_) {}
+          try { candidates[i].scrollTo({ left: left, behavior: behavior || 'smooth' }); } catch (_) {}
+        }
+      }
+      function setActive(i) {
+        active = i;
+        if (counter)  counter.textContent  = (i + 1) + ' / ' + slides.length;
+        if (progress) progress.style.width = (((i + 1) / slides.length) * 100) + '%';
+        try { localStorage.setItem(KEY, String(i)); } catch (_) {}
+      }
+      function go(i) {
+        var next = Math.max(0, Math.min(slides.length - 1, i));
+        setActive(next);
+        scrollToLeft(next * window.innerWidth, 'smooth');
+      }
+      function toggleFullscreen() {
+        var root = document.documentElement;
+        var activeFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+        if (activeFullscreen) {
+          var exit = document.exitFullscreen || document.webkitExitFullscreen;
+          if (exit) exit.call(document);
+          return;
+        }
+        var request = root.requestFullscreen || root.webkitRequestFullscreen;
+        if (request) {
+          var result = request.call(root);
+          if (result && result.catch) result.catch(function () {});
+        }
+      }
+      function syncFromScroll() {
+        var i = Math.round(activeScrollLeft() / window.innerWidth);
+        if (i !== active && i >= 0 && i < slides.length) setActive(i);
+      }
+      function realignAfterResize() {
+        if (resizeFrame) cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(function () {
+          resizeFrame = 0;
+          // Fullscreen/projector transitions change the viewport width while
+          // preserving the old pixel offset. Re-anchor the current slide.
+          scrollToLeft(active * window.innerWidth, 'instant');
+          syncFromScroll();
+        });
+      }
+      function onKey(e) {
+        if (e.defaultPrevented) return;
+        var t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+        if      (e.key === 'f' || e.key === 'F')                                               { e.preventDefault(); toggleFullscreen(); }
+        else if (e.key === 'ArrowRight' || e.key === ' '       || e.key === 'PageDown') { e.preventDefault(); go(active + 1); }
+        else if (e.key === 'ArrowLeft'  || e.key === 'PageUp')                            { e.preventDefault(); go(active - 1); }
+        else if (e.key === 'Home')                                                        { e.preventDefault(); go(0); }
+        else if (e.key === 'End')                                                         { e.preventDefault(); go(slides.length - 1); }
+      }
+
+      // listen on both surfaces, capture phase
+      window.addEventListener('keydown', onKey, true);
+      document.addEventListener('keydown', onKey, true);
+      document.addEventListener('scroll', syncFromScroll, { passive: true, capture: true });
+      window.addEventListener('scroll', syncFromScroll,   { passive: true });
+      window.addEventListener('resize', realignAfterResize, { passive: true });
+
+      // auto-focus
+      document.body.setAttribute('tabindex', '-1');
+      document.body.style.outline = 'none';
+      function focusDeck() { try { window.focus(); document.body.focus({ preventScroll: true }); } catch (_) {} }
+      document.addEventListener('mousedown', focusDeck);
+      window.addEventListener('load', focusDeck);
+      focusDeck();
+
+      // restore last-seen position
+      try {
+        var saved = parseInt(localStorage.getItem(KEY) || '0', 10);
+        if (!isNaN(saved) && saved >= 0 && saved < slides.length) {
+          setActive(saved);
+          scrollToLeft(saved * window.innerWidth, 'instant');
+        } else {
+          setActive(0);
+        }
+      } catch (_) { setActive(0); }
+    })();
+
+    /* Speaker notes: independent of the nav script above. Press N to toggle. */
+    (function () {
+      var counter = document.getElementById('deck-counter');
+      var panel   = document.getElementById('notes-panel');
+      var body    = document.getElementById('notes-body');
+      var label   = document.getElementById('notes-slide-label');
+      var slides  = document.querySelectorAll('.slide');
+      if (!counter || !panel || !body || !label) return;
+
+      function index() {
+        var m = (counter.textContent || '').match(/^(\d+)/);
+        return m ? Math.max(0, Math.min(slides.length - 1, parseInt(m[1], 10) - 1)) : 0;
+      }
+      function render() {
+        var slide = slides[index()];
+        if (!slide) return;
+        var notes = slide.querySelector('.notes');
+        body.innerHTML = notes ? notes.innerHTML : '<p>Sem notas para este slide.</p>';
+        label.textContent = slide.getAttribute('data-screen-label') || ('Slide ' + (index() + 1));
+      }
+      function toggle(force) {
+        var open = typeof force === 'boolean' ? force : !document.body.classList.contains('notes-open');
+        document.body.classList.toggle('notes-open', open);
+        if (open) render();
+      }
+
+      document.addEventListener('keydown', function (e) {
+        var t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+        if (e.key === 'n' || e.key === 'N') { e.preventDefault(); toggle(); }
+        else if (e.key === 'Escape') { toggle(false); }
+      }, true);
+
+      new MutationObserver(render).observe(counter, { childList: true, characterData: true, subtree: true });
+      render();
+    })();
+  </script>
+
+<script type="application/json" id="speaker-notes">
+[
+  "Abrir agradecendo à banca e situando o grupo: somos quatro estudantes de Psicologia da Faculdade Uniguaçu, com mentoria profissional e orientação docente.\n\n      Em uma frase: propomos uma intervenção psicoeducativa breve de três encontros com as camareiras do Hotel Viale Tower, em Foz do Iguaçu. O foco não é tratar transtornos, e sim promover saúde mental e bem-estar no próprio ambiente de trabalho.\n\n      Substituir [DATA] pela data da apresentação.",
+  "Apresentar rapidamente cada integrante. Gisleine atua como mentora profissional da área de Psicologia na cidade; Gabriel é docente do curso, especialista em educação, e responde pela orientação metodológica.\n\n      Deixar claro o desenho de trabalho: os estudantes conduzem a intervenção, com supervisão da mentora e do docente.",
+  "Esta é a página que justifica a existência do projeto. O argumento central: a demanda não é presumida pelo grupo, ela está documentada na literatura internacional sobre trabalho em hotelaria.\n\n      Se a banca perguntar sobre magnitude, citar que os estudos com camareiras encontram associação consistente entre condições psicossociais do trabalho e sintomas de ansiedade e depressão, sem transformar isso em número que não coletamos.",
+  "Ler a questão devagar. Ela delimita três escolhas do projeto: intervenção breve (três encontros, não um programa longo), psicoeducação (não psicoterapia) e promoção de bem-estar (não tratamento de transtornos).\n\n      Esse recorte responde à realidade das camareiras: turnos, carga de quartos por dia e pouca disponibilidade de horário.",
+  "Ler o objetivo geral uma vez, devagar. Ele deve soar como uma frase só: promover saúde mental e bem-estar, com um método (psicoeducação breve) e um lugar (o ambiente de trabalho).\n\n      Se a banca pedir, o objetivo geral não menciona \"reduzir sintomas\"; isso fica nos objetivos específicos, medidos pela DASS-21.",
+  "Os dois primeiros objetivos são de caracterização e triagem; os três últimos correspondem exatamente aos três encontros. Isso mostra coerência entre o que se mede e o que se intervém.\n\n      A DASS-21 entra como instrumento de triagem, não como diagnóstico; vale reforçar esse limite se a banca questionar.",
+  "Ponto de partida: já existe evidência de que intervenções curtas funcionam nesse contexto. Não estamos inventando um formato; estamos adaptando um procedimento com respaldo.\n\n      Se pedirem o referencial de mindfulness, a definição usada no projeto é a de atenção ao momento presente, intencional e sem julgamento (Zhang et al., 2025).",
+  "O argumento é de prevenção e promoção, não de tratamento. O projeto não substitui atendimento psicológico; ele cria um espaço de reconhecimento emocional e de ferramentas de autorregulação.\n\n      Destacar a viabilidade: sem custo de deslocamento, dentro da jornada, com uma arquitetura de encontro que já prevê pausas e tarefas curtas.",
+  "Deixar claro o que já foi feito: a coleta demográfica inicial está concluída. Os encontros ainda não ocorreram. A DASS-21 é aplicada antes do primeiro encontro.\n\n      Explicar a arquitetura fixa dos encontros: sempre abrir com prática de mindfulness, entrar no conteúdo e fechar com tarefa de casa. A previsibilidade da estrutura ajuda na adesão.",
+  "Este slide é o coração da proposta. Cada encontro responde a um objetivo específico e tem uma técnica prática identificável: respiração, termômetro emocional e roleplay, triangulação cognitiva.\n\n      Se pedirem detalhe, o roleplay trabalha situações reais de atendimento a hóspedes, para reduzir o desgaste do trabalho emocional e fortalecer a escuta empática.\n\n      O terceiro encontro termina com um plano pessoal de enfrentamento; é o produto concreto que a participante leva embora.",
+  "As faixas marcadas como [DATA] são placeholders: substituir pelos períodos reais antes da apresentação.\n\n      O que importa comunicar é a ordem: contato e caracterização, triagem, três encontros em sequência e devolutiva com relatório final ao hotel.",
+  "Referencial completo do projeto: evidência de eficácia de intervenções breves, contexto ocupacional das camareiras, necessidades de intervenção e instrumentos.\n\n      Destacar dois pontos: a DASS-21 na versão brasileira validada (Vignola; Tucci, 2014) sustenta a triagem; e o estudo de Biding e Nordin (2014) sustenta o formato breve de três sessões.\n\n      A referência completa, com links de acesso, está no resumo expandido entregue à banca."
+]
+</script>
+
+
+</body></html>
