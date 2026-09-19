@@ -281,6 +281,7 @@
       font-size: var(--fs-meta);
       letter-spacing: 0.06em;
       color: var(--muted);
+      line-height: 1;
     }
     [data-od-id="objetivos-especificos-lista"] .nb,
     [data-od-id="metodologia-topicos"] .nb {
@@ -304,7 +305,7 @@
       padding: 15px 0;
     }
     .steps li:last-child { border-bottom: 1px solid var(--border); }
-    .steps .nb { padding-top: 5px; }
+    .steps .nb { padding-top: 0; line-height: 1; }
     .steps .src { font-size: var(--fs-meta); color: var(--muted); }
     .slide.dark .steps li { color: var(--bg); border-top-color: var(--border-on-dark); }
     .slide.dark .steps li:last-child { border-bottom-color: var(--border-on-dark); }
@@ -366,6 +367,7 @@
       border-radius: 999px;
       background: color-mix(in oklch, var(--accent) 9%, transparent);
       color: var(--accent-deep);
+      line-height: 1;
     }
     .encontro h3 {
       font-family: var(--font-display);
